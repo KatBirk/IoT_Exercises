@@ -24,15 +24,10 @@ void TaskBlink(void *pvParameters) {
   }
 }
 void app_main(void) {
-  printf("Hello world!\n");
-
   gpio_pulldown_en(PIN); // Pulldown is important
-
   gpio_set_direction(PIN, GPIO_MODE_INPUT);
   xTaskCreate(TaskBlink, "ReadPin", 4096, NULL, 1, NULL);
-
   vTaskDelay(DELAY * 2);
-
   fflush(stdout);
   esp_restart();
 }
