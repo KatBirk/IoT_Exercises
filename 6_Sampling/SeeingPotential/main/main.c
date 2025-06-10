@@ -5,6 +5,7 @@
  */
 
 #include "driver/adc_types_legacy.h"
+#include "driver/gpio.h"
 #include "esp_adc/adc_oneshot.h"
 #include "esp_chip_info.h"
 #include "esp_flash.h"
@@ -46,7 +47,7 @@ void readADC(void *pvParameters) {
   while (1) {
 
     ESP_ERROR_CHECK(adc_oneshot_read(adc1_handle, ADC_CHANNEL, &adc_raw[0][0]));
-    ESP_LOGI(TAG, "ADC%d Channel[%d] Raw Data: %d", ADC + 1, ADC_CHANNEL,
+    ESP_LOGI(TAG, "ADC%d Channel[%d] Raw Data: %d", ADC+1, ADC_CHANNEL,
              adc_raw[0][0]);
     vTaskDelay(DELAY);
   }
@@ -74,18 +75,20 @@ int sample() {
   ESP_LOGI(TAG, "ADC%d Channel[%d] Raw Data: %d", ADC + 1, ADC_CHANNEL,
            adc_raw);
   vTaskDelay(DELAY);
-   ESP_ERROR_CHECK(adc_oneshot_del_unit(adc1_handle)); // CLEAN UP, so other methods can use the channel
+  ESP_ERROR_CHECK(adc_oneshot_del_unit(
+      adc1_handle)); // CLEAN UP, so other methods can use the channel
 
-    return adc_raw;
-
+  return adc_raw;
 }
 
 void app_main(void) {
-  printf("THE SAMPLE:%d\n",sample());
+  gpio_reset_pin(PIN);
+  gpio_set_direction(PIN, GPIO_MODE_INPUT);
+
+  printf("THE SAMPLE:%d\n", sample());
   fflush(stdout);
   xTaskCreate(readADC, "ADC", 4096, NULL, 1, NULL);
   vTaskDelay(DELAY * 2);
-
 
   //  esp_restart();
 }

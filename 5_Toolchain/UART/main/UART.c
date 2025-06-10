@@ -1,3 +1,4 @@
+
 #include "driver/uart.h"
 #include "driver/gpio.h"
 #include "esp_chip_info.h"
@@ -53,7 +54,7 @@ void uart(void *arg) {
       gpio_set_level(PIN, 1);
     }
     length = uart_read_bytes(uart_num, data, length, 100);
-    vTaskDelay(DELAY / 10);
+    vTaskDelay((int)(DELAY/10));
   }
 }
 void app_main(void) {

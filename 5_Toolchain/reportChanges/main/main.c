@@ -17,17 +17,18 @@
 #define PIN (32)
 
 void TaskBlink(void *pvParameters) {
-  while (1) {
-    int val = gpio_get_level(PIN);
-    printf("%d\n", val);
-    vTaskDelay(DELAY);
-  }
+    while (1) {
+        int val = gpio_get_level(PIN);
+        printf("%d\n", val);
+        vTaskDelay(DELAY);
+    }
 }
 void app_main(void) {
-  gpio_pulldown_en(PIN); // Pulldown is important
-  gpio_set_direction(PIN, GPIO_MODE_INPUT);
-  xTaskCreate(TaskBlink, "ReadPin", 4096, NULL, 1, NULL);
-  vTaskDelay(DELAY * 2);
-  fflush(stdout);
-  esp_restart();
+    gpio_pulldown_en(PIN); // Pulldown is important
+    gpio_set_direction(PIN, GPIO_MODE_INPUT);
+    xTaskCreate(TaskBlink, "ReadPin", 4096, NULL, 1, NULL);
+    vTaskDelay(DELAY * 2);
+
+    fflush(stdout);
+    esp_restart();
 }
